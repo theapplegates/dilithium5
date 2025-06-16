@@ -8,6 +8,26 @@ import { Spinner } from './common/Spinner';
 import { rpgpMockService } from '../services/rpgpMockService';
 import { RpgpPublicKey } from '../types';
 import { PencilSquareIcon, ClipboardDocumentIcon } from '@heroicons/react/24/outline';
+import React, { useState } from 'react'
+import { rpgpService } from '../rpgpService'
+
+export function SignSection({ availableKeys }: SignSectionProps) {
+// ← 0) Add this
+const [output, setOutput] = useState<string>('')
+
+// ← 1 & 2) Add this handler
+async function handleSign() {
+  const message      = /* whatever your input state/textarea holds */
+  const privateKeyId = /* the key ID the user selected */
+  try {
+    const sig = await rpgpService.signMessage({ privateKeyId, message })
+    setOutput(sig)
+  } catch (err) {
+    console.error(err)
+    setOutput('❌ Signing failed: ' + String(err))
+  }
+}
+
 
 interface SignSectionProps {
   availableKeys: RpgpPublicKey[];
